@@ -1,4 +1,5 @@
 import 'package:authenticator/service/aws_service.dart';
+import 'package:dlwidgets/dlwidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 class _State extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordField = TextEditingController();
+  String? token = "";
 
   @override
   void dispose() {
@@ -21,8 +23,8 @@ class _State extends State<LoginPage> {
     super.dispose();
   }
 
- void login(String email, String password) {
-     AwsService().createInitialRecord(email, password);
+  void login(String email, String password) async {
+     await AwsService().createInitialRecord(email, password).then((value) => token = value);
   }
 
   @override
@@ -57,9 +59,9 @@ class _State extends State<LoginPage> {
               ),
             ),
           )),
-          ElevatedButton(onPressed: () {
+          DlButton(buttonName: "Login", size: ButtonSize.small, onPressed: (){
             login(emailController.text, passwordField.text);
-          }, style: ElevatedButton.styleFrom(backgroundColor: Colors.blue), child: const Text("Login", style: TextStyle(fontSize: 18, color: Colors.black),))
+          }, buttonColor:  Colors.blue),
         ],
       ))],
     ),);

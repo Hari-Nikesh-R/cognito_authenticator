@@ -18,23 +18,25 @@ class AwsService{
   }
 
   final userPool = CognitoUserPool(
-      "USER_POOL_ID",
-      'CLIENT_ID',
+      "eu-north-1_nL5JTG6wK	",
+      '32htgkd910uguj8ih9idof1pec',
   );
 
-  Future createInitialRecord(email, password) async {
+  Future<String?> createInitialRecord(email, password) async {
     debugPrint('Authenticating User...');
     final cognitoUser = CognitoUser(email, userPool);
     final authDetails = AuthenticationDetails(
       username: email,
       password: password,
     );
-
-
+    debugPrint("Email: $email Pass: $password");
     CognitoUserSession? session;
     try {
       session = await cognitoUser.authenticateUser(authDetails);
       debugPrint('Login Success...');
+      debugPrint("JWT token: ${session?.getAccessToken().jwtToken}");
+      return session?.getAccessToken().jwtToken;
+
     } on CognitoUserNewPasswordRequiredException catch (exception) {
       debugPrint('CognitoUserNewPasswordRequiredException $exception');
     } on CognitoUserMfaRequiredException catch (exception) {
@@ -54,5 +56,6 @@ class AwsService{
     } catch (exception) {
       debugPrint(exception.toString());
     }
+    return null;
   }
 }
