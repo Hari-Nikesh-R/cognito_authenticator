@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AwsService{
 
@@ -18,8 +17,8 @@ class AwsService{
   }
 
   final userPool = CognitoUserPool(
-      "eu-north-1_nL5JTG6wK	",
-      '32htgkd910uguj8ih9idof1pec',
+      "eu-north-1_sHQFfdHBj",
+      '13vdntl75g3un9a2qcjafpui32',
   );
 
   Future<String?> createInitialRecord(email, password) async {
