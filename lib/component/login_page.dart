@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 
 class _State extends State<LoginPage> {
 
-  String? token = "";
+  String? token;
   String? emailError;
   String? passwordError;
 
@@ -25,7 +25,14 @@ class _State extends State<LoginPage> {
   }
 
   Future login(String email, String password) async {
-      AwsService().createInitialRecord(email, password).then((value) => token = value);
+       token =await AwsService().createInitialRecord(email, password);
+       setState(() {
+         if(token!=null) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+               content: Text("Authenticated")
+           ));
+         }
+       });
   }
 
   TextEditingController textEditingController = TextEditingController();

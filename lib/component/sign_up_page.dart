@@ -1,3 +1,6 @@
+import 'package:authenticator/component/pin_verification_page.dart';
+import 'package:authenticator/model/registeration_model.dart';
+import 'package:authenticator/service/api_interface.dart';
 import 'package:dlwidgets/dlwidgets.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +15,24 @@ class _SignUpPageState extends State<SignUpPage> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+
+  String? passwordError;
+  String? emailError;
+  String? phoneError;
+  String? value;
+
+  signUp(RegisterationModel registerationModel) async{
+    value =  await ApiInterface().register(registerationModel);
+    setState(() {
+      if(value == "User Registered Successfully"){
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("User Registered Successfully")
+        ));
+      }
+      Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyPage(detail: registerationModel.username)));
+    });
+  }
 
 
   @override
@@ -30,21 +51,64 @@ class _SignUpPageState extends State<SignUpPage> {
                   textFieldController: emailController,
                   labelText: "Email",
                         trailingIcon: const Icon(Icons.email),
+                        errorText: emailError,
+                        onChanged: (value){
+                          setState(() {
+                            emailError = null;
+                            passwordError = null;
+                            phoneError = null;
+                          });
+                        },
                 ),
                       DlTextFormField(
                         textFieldController: passwordController,
                         labelText: "Password",
                         isPassword: true,
+                        errorText: passwordError,
+                        onChanged: (value){ setState(() {
+                          emailError = null;
+                          passwordError = null;
+                          phoneError = null;
+                        });
+
+                        },
                       ),
                       DlTextFormField(
-                        textFieldController: passwordController,
+                        textFieldController: mobileController,
                         labelText: "Mobile",
                         trailingIcon: const Icon(Icons.phone),
+                        errorText: phoneError,
+                        onChanged: (value){ setState(() {
+                          emailError = null;
+                          passwordError = null;
+                          phoneError = null;
+                        });
+                        },
                       ),
                     ]
             ))),
             DlButton(buttonName: "Sign Up", size: ButtonSize.small, onPressed: (){
               //todo: sign up call
+              setState(() {
+                  if(emailController.text.isEmpty){
+                    emailError = "Email must not be empty";
+                  }
+                  if(passwordController.text.isEmpty){
+                    passwordError = "Password must not be empty";
+                  }
+                  if(mobileController.text.isEmpty){
+                    phoneError = "Mobile number must not be empty";
+                  }
+              });
+              RegisterationModel registerModel = RegisterationModel(
+                password: passwordController.text, 
+                  username: emailController.text,
+                  userAttributes: [
+                    UserAttribute(name: "phone_number", value:"+91${mobileController.text}")
+                  ]
+              );
+              signUp(registerModel);
+
             }, buttonColor:  Colors.blue),
           ]),
         ),

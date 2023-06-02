@@ -1,0 +1,1 @@
+String COGNITO_SERVICE = "http://192.168.29.187:9089/";
