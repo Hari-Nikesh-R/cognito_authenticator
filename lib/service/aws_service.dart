@@ -6,19 +6,10 @@ import 'package:flutter/material.dart';
 
 class AwsService{
 
-  String calculateSecretHash(String clientSecret, String userPoolId, String clientId) {
-    final message = utf8.encode(userPoolId + clientId);
-    final key = utf8.encode(clientSecret);
-    final hmacSha256 = Hmac(sha256, key); // Use HmacSha256 for hashing
-    final signature = hmacSha256.convert(message);
-    final signatureBytes = signature.bytes;
-    final secretHash = base64.encode(signatureBytes);
-    return secretHash;
-  }
 
   final userPool = CognitoUserPool(
-      "eu-north-1_sHQFfdHBj",
-      '13vdntl75g3un9a2qcjafpui32',
+      "eu-north-1_dmmqJme6c", // userPool ID
+      '347jnqks3kvrl1ofpo1aldm0qn', // client ID
   );
 
   Future<String?> createInitialRecord(email, password) async {

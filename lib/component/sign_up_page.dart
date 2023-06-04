@@ -13,14 +13,13 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-
   String? passwordError;
   String? emailError;
   String? phoneError;
   String? value;
+  late DlTextFormFieldImpl emailField;
+  late DlTextFormFieldImpl passWordField;
+  late DlTextFormFieldImpl phoneField;
 
   signUp(RegisterationModel registerationModel) async{
     value =  await ApiInterface().register(registerationModel);
@@ -34,6 +33,33 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    emailField = DlTextFormFieldImpl(TextEditingController(), (value) {
+      setState(() {
+        emailError = null;
+        passwordError = null;
+        phoneError = null;
+      });
+    }, emailError, "Email");
+    passWordField = DlTextFormFieldImpl(TextEditingController(), (value) {
+      setState(() {
+        emailError = null;
+        passwordError = null;
+        phoneError = null;
+      });
+    }, passwordError, "Password");
+    phoneField = DlTextFormFieldImpl(TextEditingController(), (value) {
+      setState(() {
+        emailError = null;
+        passwordError = null;
+        phoneError = null;
+      });
+    }, phoneError, "Phone");
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,63 +74,38 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                     children: [
                       DlTextFormField(
-                  textFieldController: emailController,
-                  labelText: "Email",
+                        input: emailField,
                         trailingIcon: const Icon(Icons.email),
-                        errorText: emailError,
-                        onChanged: (value){
-                          setState(() {
-                            emailError = null;
-                            passwordError = null;
-                            phoneError = null;
-                          });
-                        },
+
                 ),
                       DlTextFormField(
-                        textFieldController: passwordController,
-                        labelText: "Password",
+                       input: passWordField,
                         isPassword: true,
-                        errorText: passwordError,
-                        onChanged: (value){ setState(() {
-                          emailError = null;
-                          passwordError = null;
-                          phoneError = null;
-                        });
-
-                        },
                       ),
                       DlTextFormField(
-                        textFieldController: mobileController,
-                        labelText: "Mobile",
+                        input: phoneField,
                         trailingIcon: const Icon(Icons.phone),
-                        errorText: phoneError,
-                        onChanged: (value){ setState(() {
-                          emailError = null;
-                          passwordError = null;
-                          phoneError = null;
-                        });
-                        },
                       ),
                     ]
             ))),
             DlButton(buttonName: "Sign Up", size: ButtonSize.small, onPressed: (){
               //todo: sign up call
               setState(() {
-                  if(emailController.text.isEmpty){
+                  if(emailField.textFieldController.text.isEmpty){
                     emailError = "Email must not be empty";
                   }
-                  if(passwordController.text.isEmpty){
+                  if(passWordField.textFieldController.text.isEmpty){
                     passwordError = "Password must not be empty";
                   }
-                  if(mobileController.text.isEmpty){
+                  if(phoneField.textFieldController.text.isEmpty){
                     phoneError = "Mobile number must not be empty";
                   }
               });
               RegisterationModel registerModel = RegisterationModel(
-                password: passwordController.text, 
-                  username: emailController.text,
+                password: passWordField.textFieldController.text,
+                  username: emailField.textFieldController.text,
                   userAttributes: [
-                    UserAttribute(name: "phone_number", value:"+91${mobileController.text}")
+                    UserAttribute(name: "phone_number", value:"+91${phoneField.textFieldController.text}")
                   ]
               );
               signUp(registerModel);
