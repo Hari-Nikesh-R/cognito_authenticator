@@ -16,10 +16,12 @@ class _SignUpPageState extends State<SignUpPage> {
   String? passwordError;
   String? emailError;
   String? phoneError;
+  String? roleError;
   String? value;
   late DlTextFormFieldImpl emailField;
   late DlTextFormFieldImpl passWordField;
   late DlTextFormFieldImpl phoneField;
+  late DlTextFormFieldImpl roleField;
 
   signUp(RegisterationModel registerationModel) async{
     value =  await ApiInterface().register(registerationModel);
@@ -33,30 +35,36 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
+  void removeErrorText(){
+    emailError = null;
+    passwordError = null;
+    phoneError = null;
+    roleError = null;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     emailField = DlTextFormFieldImpl(TextEditingController(), (value) {
       setState(() {
-        emailError = null;
-        passwordError = null;
-        phoneError = null;
+        removeErrorText();
       });
     }, emailError, "Email");
     passWordField = DlTextFormFieldImpl(TextEditingController(), (value) {
       setState(() {
-        emailError = null;
-        passwordError = null;
-        phoneError = null;
+        removeErrorText();
       });
     }, passwordError, "Password");
     phoneField = DlTextFormFieldImpl(TextEditingController(), (value) {
       setState(() {
-        emailError = null;
-        passwordError = null;
-        phoneError = null;
+        removeErrorText();
       });
     }, phoneError, "Phone");
+    roleField = DlTextFormFieldImpl(TextEditingController(), (value) {
+      setState(() {
+        removeErrorText();
+      });
+    }, roleError, "Role");
     super.initState();
 
   }
@@ -76,7 +84,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       DlTextFormField(
                         input: emailField,
                         trailingIcon: const Icon(Icons.email),
-
                 ),
                       DlTextFormField(
                        input: passWordField,
@@ -85,6 +92,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       DlTextFormField(
                         input: phoneField,
                         trailingIcon: const Icon(Icons.phone),
+                      ),
+                      DlTextFormField(
+                        input: roleField,
+                        trailingIcon: const Icon(Icons.admin_panel_settings),
                       ),
                     ]
             ))),
@@ -100,12 +111,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   if(phoneField.textFieldController.text.isEmpty){
                     phoneError = "Mobile number must not be empty";
                   }
+                  if(roleField.textFieldController.text.isEmpty){
+                    roleError = "Role must not be empty";
+                  }
+
               });
               RegisterationModel registerModel = RegisterationModel(
                 password: passWordField.textFieldController.text,
                   username: emailField.textFieldController.text,
                   userAttributes: [
-                    UserAttribute(name: "phone_number", value:"+91${phoneField.textFieldController.text}")
+                    UserAttribute(name: "phone_number", value:"+91${phoneField.textFieldController.text}"),
+                    UserAttribute(name: "custom:role", value: roleField.textFieldController.text)
                   ]
               );
               signUp(registerModel);

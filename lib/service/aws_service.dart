@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+
+import '../utlis/constants.dart';
 
 class AwsService{
 
 
   final userPool = CognitoUserPool(
-      "eu-north-1_dmmqJme6c", // userPool ID
-      '347jnqks3kvrl1ofpo1aldm0qn', // client ID
+    USER_POOL_ID, // userPool ID
+      CLIENT_ID, // client ID
   );
 
   Future<String?> createInitialRecord(email, password) async {

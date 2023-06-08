@@ -94,14 +94,14 @@ class _State extends State<LoginPage> {
           )),
           DlButton(buttonName: "Login", size: ButtonSize.small, onPressed: (){
               setState(() {
-                if(textEditingController.text.isEmpty){
+                if(emailField.textFieldController.text.isEmpty){
                   emailField.errorText = "Email must not be empty";
                   }
-                if(passwordController.text.isEmpty){
+                if(passWordField.textFieldController.text.isEmpty){
                   passWordField.errorText = "Password must not be empty";
                 }
               });
-              login(textEditingController.text, passwordController.text);
+              login(emailField.textFieldController.text, passWordField.textFieldController.text);
           }, buttonColor:  Colors.blue),
           Center(
             child: Padding(padding: const EdgeInsets.all(24), child: GestureDetector(onTap: (){
